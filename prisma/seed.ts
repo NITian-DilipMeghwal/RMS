@@ -19,7 +19,7 @@ async function main() {
             qr_code: {
                 create: {
                     qr_code_url: 'https://example.com/qr/gourmet-haven',
-                },
+                }, // hello
             },
         },
     });
