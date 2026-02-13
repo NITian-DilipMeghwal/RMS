@@ -36,6 +36,27 @@ const OFFERS = [
   },
 ];
 
+const CRITIC_REVIEWS = [
+  {
+    id: 'c1',
+    name: 'Gordon R.',
+    credential: 'Michelin Star Chef',
+    rating: 4.8,
+    review: 'The culinary execution here is exquisite. The fusion of flavors in the Spicy Burger is a masterclass in modern fast-casual dining. Highly recommended for the discerning palate.',
+    avatar: 'https://i.pravatar.cc/150?img=11',
+    badge: 'Verified Critic',
+  },
+  {
+    id: 'c2',
+    name: 'Julia C.',
+    credential: 'Senior Food Editor',
+    rating: 4.5,
+    review: 'A delightful experience. The ingredients are fresh, and the presentation plays a significant role in the overall enjoyment. Service was impeccable.',
+    avatar: 'https://i.pravatar.cc/150?img=5',
+    badge: 'Top Reviewer',
+  },
+];
+
 const MENU_ITEMS = [
   {
     id: '1',
@@ -111,6 +132,7 @@ export default function RestaurantPage() {
   const [selectedCategory, setSelectedCategory] = useState('Burger');
   const [isBookingVisible, setBookingVisible] = useState(false);
   const [isOffersVisible, setOffersVisible] = useState(false);
+  const [isCriticsVisible, setCriticsVisible] = useState(false);
 
   // Booking State
   const [guests, setGuests] = useState('2');
@@ -182,6 +204,11 @@ export default function RestaurantPage() {
             <TouchableOpacity style={[styles.actionButton, styles.secondaryBtn]} onPress={() => setOffersVisible(true)}>
               <MaterialCommunityIcons name="tag-outline" size={20} color="#FFF" />
               <Text style={styles.actionButtonText}>Offers</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.actionButton, styles.criticBtn]} onPress={() => setCriticsVisible(true)}>
+              <FontAwesome5 name="medal" size={18} color="#FFF" />
+              <Text style={styles.actionButtonText}>Critics</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -338,6 +365,48 @@ export default function RestaurantPage() {
         </View>
       </Modal>
 
+      {/* Food Critics Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isCriticsVisible}
+        onRequestClose={() => setCriticsVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { maxHeight: '80%' }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+              <FontAwesome5 name="medal" size={24} color="#FFD700" style={{ marginRight: 10 }} />
+              <Text style={styles.modalTitle}>Expert Critics</Text>
+            </View>
+            <Text style={{ textAlign: 'center', color: '#666', marginBottom: 20 }}>
+              Verified reviews from authenticated food critics. Zero manipulation, 100% credibility.
+            </Text>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {CRITIC_REVIEWS.map(critic => (
+                <View key={critic.id} style={styles.criticCard}>
+                  <View style={styles.criticHeader}>
+                    <Image source={{ uri: critic.avatar }} style={styles.criticAvatar} />
+                    <View>
+                      <Text style={styles.criticName}>{critic.name} <MaterialCommunityIcons name="check-decagram" size={14} color="#1DA1F2" /></Text>
+                      <Text style={styles.criticCredential}>{critic.credential}</Text>
+                    </View>
+                    <View style={styles.criticRatingBox}>
+                      <Text style={styles.criticRatingText}>{critic.rating}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.criticReviewText}>"{critic.review}"</Text>
+                </View>
+              ))}
+            </ScrollView>
+
+            <TouchableOpacity style={styles.cancelBtn} onPress={() => setCriticsVisible(false)}>
+              <Text style={styles.cancelBtnText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   );
 }
@@ -426,12 +495,17 @@ const styles = StyleSheet.create({
   },
   secondaryBtn: {
     backgroundColor: '#181C2E',
-    marginRight: 0,
+    marginRight: 10,
   },
   actionButtonText: {
     color: '#FFF',
     fontWeight: 'bold',
-    marginLeft: 8,
+    marginLeft: 6,
+    fontSize: 13,
+  },
+  criticBtn: {
+    backgroundColor: '#333', // Distinct dark color for critics
+    marginRight: 0,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -663,5 +737,51 @@ const styles = StyleSheet.create({
   codeText: {
     fontWeight: 'bold',
     color: '#FF7622',
+  },
+  // Critics Modal Styles
+  criticCard: {
+    marginBottom: 20,
+    padding: 16,
+    backgroundColor: '#F8F9FB',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#EFEFEF',
+  },
+  criticHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  criticAvatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 12,
+  },
+  criticName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#181C2E',
+  },
+  criticCredential: {
+    fontSize: 12,
+    color: '#FF7622',
+    fontWeight: '600',
+  },
+  criticRatingBox: {
+    marginLeft: 'auto',
+    backgroundColor: '#181C2E',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  criticRatingText: {
+    color: '#FFF',
+    fontWeight: 'bold',
+  },
+  criticReviewText: {
+    fontStyle: 'italic',
+    color: '#444',
+    lineHeight: 20,
   },
 });
