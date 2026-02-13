@@ -13,6 +13,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from 'expo-router';
+import { setSelectedRestaurant } from '@/lib/selectedRestaurant';
 import MapView, { Marker } from "react-native-maps";
 import useUserLocation from "../hooks/useUserLocation";
 import { restaurants } from "../data/restaurants";
@@ -26,6 +28,7 @@ const CATEGORIES = [
 
 export default function HomeScreen() {
   const region = useUserLocation(); // custom hook returning { latitude, longitude }
+  const router = useRouter();
 
   const renderCategory = ({ item }: { item: typeof CATEGORIES[0] }) => (
     <TouchableOpacity style={styles.categoryCard}>
@@ -35,7 +38,14 @@ export default function HomeScreen() {
   );
 
   const renderRestaurant = ({ item }: { item: typeof restaurants[0] }) => (
-    <TouchableOpacity style={styles.restaurantCard}>
+    <TouchableOpacity
+      style={styles.restaurantCard}
+      onPress={() => {
+        setSelectedRestaurant(item.id);
+        router.push('/restaurant' as any);
+      }}
+      activeOpacity={0.85}
+    >
       <Image source={{ uri: item.image }} style={styles.resImage} />
       <View style={styles.resInfo}>
         <Text style={styles.resName}>{item.name}</Text>
@@ -82,11 +92,11 @@ export default function HomeScreen() {
           Hey Bharat, <Text style={{ fontWeight: "bold" }}>Good Afternoon!</Text>
         </Text>
 
-        {/* Search Bar */}
-        <View style={styles.searchBar}>
+        {/* Search Bar (opens Search screen) */}
+        <TouchableOpacity style={styles.searchBar} onPress={() => router.push('/search' as any)} activeOpacity={0.8}>
           <Ionicons name="search-outline" size={20} color="#676767" />
-          <TextInput placeholder="Search dishes, restaurants" style={styles.searchInput} />
-        </View>
+          <Text style={styles.searchInput}>Search dishes, restaurants</Text>
+        </TouchableOpacity>
 
         {/* Categories */}
         <View style={styles.sectionHeader}>
@@ -151,7 +161,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#FBFCFF", paddingHorizontal: 20 },
+  container: { flex: 1, backgroundColor: "#FBFCFF", paddingHorizontal: 20, paddingTop: 8 },
   headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 10 },
   menuButton: { backgroundColor: "#F6F6F6", padding: 8, borderRadius: 50 },
   addressContainer: { alignItems: "center" },
@@ -162,7 +172,7 @@ const styles = StyleSheet.create({
   badgeText: { color: "white", fontSize: 10, fontWeight: "bold" },
   welcomeText: { fontSize: 18, marginTop: 20, color: "#32343E" },
   searchBar: { flexDirection: "row", backgroundColor: "#F6F6F6", borderRadius: 15, padding: 15, marginTop: 20, alignItems: "center" },
-  searchInput: { marginLeft: 10, flex: 1 },
+  searchInput: { marginLeft: 10, flex: 1, color: '#666' },
   sectionHeader: { flexDirection: "row", justifyContent: "space-between", marginTop: 25, alignItems: "center" },
   sectionTitle: { fontSize: 18, fontWeight: "600" },
   seeAll: { color: "#32343E", opacity: 0.7 },

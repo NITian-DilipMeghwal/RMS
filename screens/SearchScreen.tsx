@@ -11,6 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const RECENT_KEYWORDS = ['Burger', 'Sandwich', 'Pizza'];
 
@@ -23,21 +24,35 @@ const SUGGESTED = [
 
 export default function SearchScreen() {
   const [searchText, setSearchText] = useState('');
+  const router = useRouter();
 
   const renderKeyword = (keyword: string) => (
-    <View key={keyword} style={styles.chip}>
+    <TouchableOpacity key={keyword} style={styles.chip} onPress={() => setSearchText(keyword)}>
       <Text>{keyword}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
+  const filtered = searchText
+    ? SUGGESTED.filter((s) => s.name.toLowerCase().includes(searchText.toLowerCase()))
+    : SUGGESTED;
+
   const renderSuggestedItem = ({ item }: { item: typeof SUGGESTED[0] }) => (
-    <View style={styles.suggestedItem}>
+    <TouchableOpacity
+      style={styles.suggestedItem}
+      onPress={() => {
+        // store selected id and navigate
+        // import here to avoid circular/top-level ordering issues
+        const { setSelectedRestaurant } = require('@/lib/selectedRestaurant');
+        setSelectedRestaurant(item.id);
+        router.push('/restaurant' as any);
+      }}
+    >
       <Image source={{ uri: item.img }} style={styles.suggestedImg} />
       <View style={{ marginLeft: 12 }}>
         <Text style={styles.suggestedName}>{item.name}</Text>
         <Text>⭐ {item.rating}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -45,7 +60,7 @@ export default function SearchScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Search</Text>
@@ -71,10 +86,10 @@ export default function SearchScreen() {
         <Text style={styles.subTitle}>Recent Keywords</Text>
         <View style={styles.keywordRow}>{RECENT_KEYWORDS.map(renderKeyword)}</View>
 
-        {/* Suggested Restaurants */}
-        <Text style={styles.subTitle}>Suggested Restaurants</Text>
+        {/* Suggested Restaurants / Results */}
+        <Text style={styles.subTitle}>{searchText ? 'Results' : 'Suggested Restaurants'}</Text>
         <FlatList
-          data={SUGGESTED}
+          data={filtered}
           keyExtractor={(item) => item.id}
           renderItem={renderSuggestedItem}
           scrollEnabled={false} // FlatList inside ScrollView
