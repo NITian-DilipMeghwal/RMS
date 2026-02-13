@@ -10,6 +10,7 @@ export default function WelcomeScreen() {
 
     return (
         <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+            <View style={styles.bgDecor} />
             <View style={styles.content}>
                 {/* Logo/Branding Area */}
                 <View style={styles.logoContainer}>
@@ -23,6 +24,7 @@ export default function WelcomeScreen() {
                 {/* Illustration Area */}
                 <View style={styles.illustrationContainer}>
                     <View style={styles.placeholderIllustration}>
+                        <View style={styles.illustrationCircle} />
                         <Text style={styles.illustrationEmoji}>🍽️</Text>
                     </View>
                 </View>
@@ -37,6 +39,7 @@ export default function WelcomeScreen() {
                     <TouchableOpacity
                         style={styles.loginButton}
                         onPress={() => router.push('/login' as any)}
+                        activeOpacity={0.8}
                     >
                         <Text style={styles.loginText}>
                             Already have an account? <Text style={styles.loginLink}>LOG IN</Text>
@@ -64,13 +67,18 @@ const styles = StyleSheet.create({
         marginTop: AuthTheme.spacing.xl,
     },
     logoCircle: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
+        width: 120,
+        height: 120,
+        borderRadius: 60,
         backgroundColor: AuthTheme.colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: AuthTheme.spacing.md,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.12,
+        shadowRadius: 12,
+        elevation: 6,
     },
     logoText: {
         fontSize: 32,
@@ -78,7 +86,7 @@ const styles = StyleSheet.create({
         color: AuthTheme.colors.white,
     },
     appName: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
         color: AuthTheme.colors.darkNavy,
         marginBottom: AuthTheme.spacing.xs,
@@ -99,11 +107,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    illustrationCircle: {
+        position: 'absolute',
+        width: 160,
+        height: 160,
+        borderRadius: 80,
+        backgroundColor: AuthTheme.colors.primary,
+        opacity: 0.08,
+    },
     illustrationEmoji: {
         fontSize: 120,
     },
     buttonContainer: {
         gap: AuthTheme.spacing.md,
+        marginBottom: AuthTheme.spacing.lg,
     },
     loginButton: {
         paddingVertical: AuthTheme.spacing.md,
@@ -116,5 +133,15 @@ const styles = StyleSheet.create({
     loginLink: {
         color: AuthTheme.colors.primary,
         fontWeight: 'bold',
+    },
+    bgDecor: {
+        position: 'absolute',
+        right: -80,
+        top: -80,
+        width: 220,
+        height: 220,
+        backgroundColor: AuthTheme.colors.primary,
+        borderRadius: 110,
+        opacity: 0.14,
     },
 });

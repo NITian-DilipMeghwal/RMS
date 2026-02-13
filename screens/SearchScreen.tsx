@@ -39,11 +39,7 @@ export default function SearchScreen() {
   const renderSuggestedItem = ({ item }: { item: typeof SUGGESTED[0] }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => {
-        const { setSelectedRestaurant } = require('@/lib/selectedRestaurant');
-        setSelectedRestaurant(item.id);
-        router.push('/restaurant' as any);
-      }}
+      onPress={() => router.push(`/restaurant/${item.id}` as any)}
       activeOpacity={0.85}
     >
       <Image source={{ uri: item.img }} style={styles.cardImg} />
